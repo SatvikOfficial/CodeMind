@@ -1,7 +1,6 @@
 # Node / Bun
 node_modules
 .bun
-bun.lockb
 
 # Next.js
 .next
