@@ -1,0 +1,126 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model AnalysisReport {
+  id            String   @id @default(uuid()) @db.Uuid
+  userId        String   @map("user_id")
+  language      String
+  repository    String?
+  code          String
+  suggestions   Json
+  bugs          Json
+  optimizations Json
+  documentation String
+  score         Float
+  createdAt     DateTime @default(now()) @map("created_at")
+
+  @@index([userId, createdAt])
+  @@map("analysis_reports")
+}
+
+model UserRule {
+  id        String   @id @default(uuid()) @db.Uuid
+  userId    String   @map("user_id")
+  name      String
+  pattern   String
+  message   String
+  severity  String
+  enabled   Boolean  @default(true)
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@index([userId, createdAt])
+  @@map("user_rules")
+}
+
+model FeedbackEvent {
+  id         String   @id @default(uuid()) @db.Uuid
+  userId     String   @map("user_id")
+  analysisId String   @map("analysis_id") @db.Uuid
+  accepted   Boolean
+  note       String?
+  createdAt  DateTime @default(now()) @map("created_at")
+
+  @@index([userId, createdAt])
+  @@map("feedback_events")
+}
+
+model OAuthConnection {
+  id           String    @id @default(uuid()) @db.Uuid
+  userId       String    @map("user_id")
+  provider     String
+  accountId    String    @map("account_id")
+  username     String
+  accessToken  String    @map("access_token")
+  refreshToken String?   @map("refresh_token")
+  expiresAt    DateTime? @map("expires_at")
+  scopes       Json
+  createdAt    DateTime  @default(now()) @map("created_at")
+  updatedAt    DateTime  @updatedAt @map("updated_at")
+
+  @@unique([userId, provider])
+  @@index([userId])
+  @@map("oauth_connections")
+}
+
+model ReviewRoom {
+  id         String   @id @default(uuid()) @db.Uuid
+  name       String
+  repository String?
+  createdBy  String   @map("created_by")
+  createdAt  DateTime @default(now()) @map("created_at")
+
+  @@map("review_rooms")
+}
+
+model ReviewParticipant {
+  id        String   @id @default(uuid()) @db.Uuid
+  roomId    String   @map("room_id") @db.Uuid
+  userId    String   @map("user_id")
+  role      String
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@unique([roomId, userId])
+  @@index([userId])
+  @@map("review_participants")
+}
+
+model ReviewThread {
+  id        String   @id @default(uuid()) @db.Uuid
+  roomId    String   @map("room_id") @db.Uuid
+  title     String
+  createdBy String   @map("created_by")
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@index([roomId, createdAt])
+  @@map("review_threads")
+}
+
+model ReviewComment {
+  id        String   @id @default(uuid()) @db.Uuid
+  threadId  String   @map("thread_id") @db.Uuid
+  parentId  String?  @map("parent_id") @db.Uuid
+  body      String
+  authorId  String   @map("author_id")
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@index([threadId, createdAt])
+  @@map("review_comments")
+}
+
+model Notification {
+  id        String   @id @default(uuid()) @db.Uuid
+  userId    String   @map("user_id")
+  title     String
+  body      String
+  read      Boolean  @default(false)
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@index([userId, read, createdAt])
+  @@map("notifications")
+}

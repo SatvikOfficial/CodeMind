@@ -1,0 +1,15 @@
+name: Deploy Placeholders
+
+on:
+  workflow_dispatch:
+
+jobs:
+  vercel-placeholder:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "Configure Vercel deployment with VERCEL_TOKEN, ORG_ID, PROJECT_ID secrets."
+
+  railway-placeholder:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "Configure Railway deployment with RAILWAY_TOKEN and service IDs."
