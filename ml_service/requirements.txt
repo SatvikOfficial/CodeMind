@@ -7,3 +7,4 @@ transformers>=4.47.0
 torch>=2.5.1
 pinecone>=5.4.2
 numpy>=2.2.0
+langchain-nvidia-ai-endpoints>=0.3.6

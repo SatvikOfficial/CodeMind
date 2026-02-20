@@ -3,7 +3,7 @@ from typing import Any
 
 import numpy as np
 from langchain_core.prompts import PromptTemplate
-from langchain_openai import ChatOpenAI
+from langchain_nvidia_ai_endpoints import ChatNVIDIA
 from pinecone import Pinecone
 from transformers import AutoModel, AutoTokenizer
 import torch
@@ -21,11 +21,12 @@ class AIEngine:
     def __init__(self) -> None:
         self.llm = None
         if settings.nvidia_api_key:
-            self.llm = ChatOpenAI(
+            self.llm = ChatNVIDIA(
                 api_key=settings.nvidia_api_key,
-                base_url=settings.nvidia_base_url,
                 model=settings.nvidia_model,
-                temperature=0.1,
+                temperature=0.7,
+                top_p=0.8,
+                max_tokens=4096,
             )
 
         self.pinecone_index = None
